@@ -1,0 +1,14 @@
+/**:
+  ros__parameters:
+    # Serial connection parameters
+    serial_port: /dev/ttyUSB0
+    baud_rate: 921600
+    
+    # Frame ID for messages
+    frame_id: um982
+    
+    # TF publishing
+    publish_tf: true
+    
+    # Publishing rate (Hz)
+    publish_rate: 10.0
