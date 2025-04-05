@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 package_name = 'um982_ros2_driver'
 
@@ -10,24 +10,18 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-        ('share/' + package_name + '/launch', ['launch/um982_driver.launch.py']),
-        ('share/' + package_name + '/config', ['config/um982_params.yaml']),
+        ('share/' + package_name + '/launch', ['launch/um982_ros2_driver.launch.py']),
     ],
-    install_requires=[
-        'setuptools',
-        'numpy',
-        'pyproj',
-        'pyserial',
-    ],
+    install_requires=['setuptools', 'pyproj', 'pyserial'],
     zip_safe=True,
-    maintainer='Your Name',
-    maintainer_email='your-email@example.com',
-    description='ROS 2 driver for the UM982 GNSS module',
-    license='Apache License 2.0',
+    maintainer='user',
+    maintainer_email='user@example.com',
+    description='ROS2 driver for UNICORECOMM UM982/UM980 GPS',
+    license='GPL',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'um982_driver_node = um982_ros2_driver.node:main',
+            "um982_node = um982_ros2_driver.um982_node:main",
         ],
     },
 )

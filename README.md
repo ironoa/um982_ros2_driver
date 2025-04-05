@@ -1,107 +1,88 @@
-# UM982 ROS 2 Driver
+# UM982 Driver for ROS2
 
-A ROS 2 driver for the UM982 GNSS module. This driver provides a ROS 2 interface to the UM982 GNSS module, publishing position, velocity, and orientation data.
+This package provides a ROS2 driver for the UNICORECOMM UM982/UM980 GPS device. It reads data from the GPS device and publishes it as ROS2 messages.
 
 ## Features
 
-- Threaded implementation for continuous serial communication
-- Comprehensive message parsing for:
-  - PVTSLN messages (position data)
-  - GNHPR messages (heading, pitch, roll)
-  - BESTNAV messages (navigation data)
-  - KSXT messages (direct velocity measurements)
-- Coordinate transformations (WGS84 to UTM)
-- Thread-safe data access with locks
-- ROS 2 lifecycle node implementation
-- Configurable parameters via YAML file
-
-## Published Topics
-
-- `/um982_driver/fix` (NavSatFix): GPS position data
-- `/um982_driver/imu` (Imu): Orientation data
-- `/um982_driver/twist` (TwistWithCovarianceStamped): Velocity data
-- `/um982_driver/odom` (Odometry): Combined position and velocity data
-
-## Parameters
-
-All parameters can be configured in the `config/um982_params.yaml` file:
-
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| serial_port | string | /dev/ttyUSB0 | Serial port for the UM982 device |
-| baud_rate | int | 921600 | Baud rate for the serial connection |
-| frame_id | string | um982 | Frame ID for the UM982 messages |
-| publish_tf | bool | true | Whether to publish TF transforms |
-| publish_rate | float | 10.0 | Rate at which to publish messages (Hz) |
-| prefer_ksxt | bool | true | Whether to prefer KSXT messages over BESTNAV for velocity data |
+- Reads GPS data from UNICORECOMM UM982/UM980 devices
+- Supports NMEA and extended NMEA instruction sets: `PVTSLN`, `GNHPR`, `BESTNAV`
+- Publishes GPS data as standard ROS2 messages:
+  - `sensor_msgs/NavSatFix` for GPS position
+  - `nav_msgs/Odometry` for UTM position and velocity
 
 ## Installation
 
 ### Dependencies
 
-- ROS 2 (tested on Humble)
-- Python 3.8+
-- pyserial
-- numpy
-- pyproj
+- ROS2 Jazzy
+- Python packages:
+  - pyproj
+  - pyserial
 
 ### Building from Source
 
 ```bash
-# Create a ROS 2 workspace (if you don't already have one)
-mkdir -p ~/ros2_ws/src
+# Clone the repository into your ROS2 workspace
 cd ~/ros2_ws/src
-
-# Clone the repository
-git clone https://github.com/your-username/um982_ros2_driver.git
+git clone https://github.com/ironoa/um982_ros2_driver.git
 
 # Install dependencies
-cd ~/ros2_ws
-rosdep install --from-paths src --ignore-src -r -y
+sudo apt-get update && \
+    apt-get install -y \
+    ros-jazzy-tf-transformations \
+    python3-pyproj \
+    python3-serial
 
 # Build the package
+cd ~/ros2_ws
 colcon build --packages-select um982_ros2_driver
 
 # Source the workspace
-source install/setup.bash
+source ~/ros2_ws/install/setup.bash
 ```
 
 ## Usage
 
-### Basic Usage
+### Configuration
 
-```bash
-# Launch the driver with default parameters
-ros2 launch um982_ros2_driver um982_driver.launch.py
+Before using the driver, you need to configure the UM982 device to output the required data. Connect to the device and send the following commands:
+
+```
+config com3 115200
+PVTSLNA com3 0.05
+GPHPR com3 0.05
+BESTNAVA com3 0.05
 ```
 
-### Overriding Parameters
+This configures the device to output the required data on COM2 at 115200 baud rate, with a frequency of 0.05 seconds (20 Hz).
+
+### Running the Node
+
+You can run the node using the provided launch file:
 
 ```bash
-# Override the serial port and baud rate
-ros2 launch um982_ros2_driver um982_driver.launch.py serial_port:=/dev/ttyACM0 baud_rate:=115200
+ros2 launch um982_ros2_driver um982_ros2_driver.launch.py port:=/dev/ttyUSB0 baud:=115200
 ```
 
-### Viewing Data
+### Parameters
 
-```bash
-# View position data
-ros2 topic echo /um982_driver/fix
+The node supports the following parameters:
 
-# View velocity data
-ros2 topic echo /um982_driver/twist
+- `port` (string, default: `/dev/ttyUSB0`): Serial port for the UM982 GPS device
+- `baud` (int, default: `921600`): Baud rate for the serial connection
+- `frame_id` (string, default: `gps`): Frame ID for the GPS messages
+- `child_frame_id` (string, default: `base_link`): Child frame ID for the odometry message
+- `publish_rate` (double, default: `20.0`): Rate at which to publish GPS data (Hz)
 
-# View orientation data
-ros2 topic echo /um982_driver/imu
+### Published Topics
 
-# View combined data
-ros2 topic echo /um982_driver/odom
-```
+- `/gps/fix` (sensor_msgs/NavSatFix): GPS position data
+- `/gps/utmpos` (nav_msgs/Odometry): UTM position and velocity data
 
 ## License
 
-Apache License 2.0
+This package is licensed under the GPL License.
 
 ## Acknowledgements
 
-This driver is based on the work from the lostDeers and sunshine projects.
+This driver is based on the [UM982Driver](https://github.com/sunshineharry/UM982Driver) by sunshineharry.
