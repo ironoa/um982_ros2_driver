@@ -1,6 +1,6 @@
 # UM982 Driver for ROS2
 
-This package provides a ROS2 driver for the UNICORECOMM UM982/UM980 GPS device. It reads data from the GPS device and publishes it as ROS2 messages.
+This package provides a ROS2 driver for the [UNICORECOMM UM982](https://en.unicore.com/products/dual-antenna-gnss-um982/)/UM980 GPS device. It reads data from the GPS device and publishes it as ROS2 messages.
 
 ## Features
 
