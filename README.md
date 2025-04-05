@@ -45,7 +45,7 @@ source ~/ros2_ws/install/setup.bash
 
 ### Configuration
 
-Before using the driver, you need to configure the UM982 device to output the required data. Connect to the device and send the following commands:
+Before using the driver, you need to configure the UM982 device to output the required data. Connect to the device and send the following commands (for example with [UPrecise](https://en.unicore.com/products/uprecise.html), unfortunately working on Windows only):
 
 ```
 config com3 115200
@@ -85,4 +85,5 @@ This package is licensed under the GPL License.
 
 ## Acknowledgements
 
-This driver is based on the [UM982Driver](https://github.com/sunshineharry/UM982Driver) by sunshineharry.
+- This driver is based on the [UM982Driver](https://github.com/sunshineharry/UM982Driver) by sunshineharry.
+- A very nice youtube tutorial playlist can be found [here](https://www.youtube.com/watch?v=jqYMHWi4KoI&list=PLlxhE8mLdQdHq4C_DjIz_UhQR9dJWjFJM), Thanks to [Ocean Exploration Lab](https://www.youtube.com/@oceanexplorationlab) 
