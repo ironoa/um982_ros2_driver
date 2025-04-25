@@ -62,12 +62,11 @@ class UM982DriverNode(Node):
             bestpos_hgt, bestpos_lat, bestpos_lon, bestpos_hgtstd, bestpos_latstd, bestpos_lonstd = self.um982serial.fix
             utm_x, utm_y = self.um982serial.utmpos
             vel_east, vel_north, vel_ver, vel_east_std, vel_north_std, vel_ver_std = self.um982serial.vel
-            heading, pitch, roll = self.um982serial.orientation
+            heading, pitch, roll, quality = self.um982serial.orientation
             this_time = self.get_clock().now().to_msg()
 
             # PRINT ORIENTATION
-            # self._ros_log_info('ABOUT TO PRINT ORIENTATION')
-            self._ros_log_info(f'Orientation: Heading: {heading}, Pitch: {pitch}, Roll: {roll}')
+            self._ros_log_info(f'Quality (i.e. RTK fix=4): {quality} | Heading: {heading} | Latitude: {bestpos_lat} | Longitude: {bestpos_lon}')
 
             # Step 1: Publish GPS Fix Data
             fix_msg = NavSatFix()

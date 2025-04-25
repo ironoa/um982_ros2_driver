@@ -71,7 +71,8 @@ def GNHPR_solver(msg:str):
     heading = float(parts[3-1])
     pitch   = float(parts[4-1])
     roll    = float(parts[5-1])
-    orientation = (heading, pitch, roll)
+    quality = int(parts[6-1])
+    orientation = (heading, pitch, roll, quality)
     return orientation
 
 
@@ -136,7 +137,7 @@ class UM982Serial(threading.Thread):
         self.isRUN          = True
         # Data
         self.fix            = None   # Data needed for sensor_msgs/NavSatFix
-        self.orientation    = None   # Heading angle
+        self.orientation    = None   # Heading angle and quality indicator
         self.vel            = None   # Velocity
         self.utmpos         = None
         # Read initial data
