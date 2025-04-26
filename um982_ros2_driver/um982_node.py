@@ -75,6 +75,17 @@ class UM982DriverNode(Node):
             fix_msg.latitude = bestpos_lat
             fix_msg.longitude = bestpos_lon
             fix_msg.altitude = bestpos_hgt
+
+            # Map quality to NavSatStatus.status
+            if quality == 0:
+                fix_msg.status.status = NavSatStatus.STATUS_NO_FIX
+            elif quality == 4:
+                fix_msg.status.status = NavSatStatus.STATUS_GBAS_FIX
+            elif quality == 9:
+                fix_msg.status.status = NavSatStatus.STATUS_SBAS_FIX
+            else:
+                fix_msg.status.status = NavSatStatus.STATUS_FIX
+
             fix_msg.position_covariance[0] = float(bestpos_latstd)**2
             fix_msg.position_covariance[4] = float(bestpos_lonstd)**2
             fix_msg.position_covariance[8] = float(bestpos_hgtstd)**2
