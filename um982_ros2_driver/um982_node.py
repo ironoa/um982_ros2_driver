@@ -3,7 +3,7 @@ import math
 
 import rclpy
 from rclpy.node import Node
-from sensor_msgs.msg import NavSatFix
+from sensor_msgs.msg import NavSatFix, NavSatStatus
 from nav_msgs.msg import Odometry
 from tf_transformations import quaternion_from_euler, euler_from_quaternion
 
