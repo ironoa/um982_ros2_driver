@@ -32,12 +32,14 @@ class UM982DriverNode(Node):
         self.declare_parameter('frame_id', 'gps')
         self.declare_parameter('child_frame_id', 'base_link')
         self.declare_parameter('publish_rate', 20.0)  # Hz
+        self.declare_parameter('invert_heading', False)
         
         port = self.get_parameter('port').get_parameter_value().string_value
         baud = self.get_parameter('baud').get_parameter_value().integer_value
         self.frame_id = self.get_parameter('frame_id').get_parameter_value().string_value
         self.child_frame_id = self.get_parameter('child_frame_id').get_parameter_value().string_value
         publish_rate = self.get_parameter('publish_rate').get_parameter_value().double_value
+        self.invert_heading = self.get_parameter('invert_heading').get_parameter_value().bool_value
         
         # Step 2: Open serial port
         try:
@@ -63,6 +65,11 @@ class UM982DriverNode(Node):
             utm_x, utm_y = self.um982serial.utmpos
             vel_east, vel_north, vel_ver, vel_east_std, vel_north_std, vel_ver_std = self.um982serial.vel
             heading, pitch, roll, quality = self.um982serial.orientation
+            
+            # Apply heading inversion if configured
+            if self.invert_heading:
+                heading = -heading
+            
             this_time = self.get_clock().now().to_msg()
 
             # PRINT ORIENTATION

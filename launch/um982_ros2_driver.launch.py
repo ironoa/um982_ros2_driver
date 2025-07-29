@@ -36,6 +36,12 @@ def generate_launch_description():
         description='Rate at which to publish GPS data (Hz)'
     )
     
+    invert_heading_arg = DeclareLaunchArgument(
+        'invert_heading',
+        default_value='false',
+        description='Flag to invert heading sign convention (true/false)'
+    )
+    
     # Create the node
     um982_node = Node(
         package='um982_ros2_driver',
@@ -47,6 +53,7 @@ def generate_launch_description():
             'frame_id': LaunchConfiguration('frame_id'),
             'child_frame_id': LaunchConfiguration('child_frame_id'),
             'publish_rate': LaunchConfiguration('publish_rate'),
+            'invert_heading': LaunchConfiguration('invert_heading'),
         }],
         output='screen'
     )
@@ -58,5 +65,6 @@ def generate_launch_description():
         frame_id_arg,
         child_frame_id_arg,
         publish_rate_arg,
+        invert_heading_arg,
         um982_node
     ])
